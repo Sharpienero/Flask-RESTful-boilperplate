@@ -1,16 +1,14 @@
-from flask import Flask
-from flask_restful import Resource, Api
-
-app = Flask(__name__)
-api = Api(app)
-
-
-class HelloWorld(Resource):
-    def get(self):
-        return {'author': 'sharpienero'}
-
-
-api.add_resource(HelloWorld, '/')
+from src.instance.config import config
+from src.instance.flask_app import app
+from src.misc.service_logger import serviceLogger as logger
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    logger.info("service started at {}:{}".format(config['host_service']['host'],
+                                                  config['host_service']['port']
+                                                  ))
+
+    app.run(host=config['host_service']['host'],
+            port=int(config['host_service']['port']),
+            threaded=True,
+            debug=True
+            )
